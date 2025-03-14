@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun 17 09:53:17 2022
+
+@author: deanchanter
+"""
+
+import pandas as pd
+import numpy as np
+
+ama = pd.read_csv("/Users/deanchanter/Downloads/Agile Maturity Assessment (Responses) PI 3.csv")
+
+
+
+ama = ama.replace("Sit:", 0, regex=True)
+ama = ama.replace("Crawl:", 1, regex=True)
+ama = ama.replace("Walk:", 2, regex=True)
+ama = ama.replace("Run:", 3, regex=True)
+ama = ama.replace("Fly:", 4, regex=True)
+ama = ama.replace("This question", np.nan, regex=True)
+ama = ama.replace("unsure", np.nan, regex=True)
+ama = ama.replace("unknown", np.nan, regex=True)
+amaRU = ama.mean(axis=0)
+
+amaRU.to_csv("OHI_PI3.csv")
+print(ama)
+print(amaRU)

@@ -1,0 +1,41 @@
+<title></title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">p,h3,h2,h4,h5,h1{
+  font-family: 'Calibri';
+  color:#151515;
+}
+</style>
+<table style="width: 600px; background-color:#FFFFFF; border: 8px solid #225E9F; border-radius: 16px">
+	<tbody>
+		<tr>
+			<td><img src="https://surveys.cms.gov/ControlPanel/Graphic.php?IM=IM_ajCMbO4UIybj3DV" width="600" /></td>
+		</tr>
+		<tr>
+			<td>
+				<h1 style="font-size: 26px; color: #225E9F;text-align: center;">Certificate Of Completion</h1>
+			</td>
+		</tr>
+		<tr>
+			<td style="font-weight: bold; font-size: 20px; padding: 1em;  text-align: center; width: 500; word-wrap: break-word; ">
+			<p>Presented to<br>
+			${e://Field/Name%20Embedded}</p>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding: 1em; text-align: center; width: 500; word-wrap: break-word; ">
+			<p style = 'font-size: 16px; margin-bottom: 0px;'>For successfully completing the<br>
+			${e://Field/Season} ${e://Field/Session}</p>
+            <p style = 'font-weight: bold; font-size: 20px; margin-top: .25em;'>{e://Field/Track}<br> Awareness Pillar</p>
+			</td>
+		</tr>
+
+		<tr>
+			<td style="text-align:left; font-size: 16px; padding: 1em;">
+            <p>CLPs Awarded: ~{ch://OCAC_UGCWB923Uw5jD6V/result}<br>
+			Cert# ${rm://Field/ResponseID}<br>
+			Date: ${date://CurrentDate/FL}</p>
+			</td>
+		</tr>
+		
+	</tbody>
+</table>
