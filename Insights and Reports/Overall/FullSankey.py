@@ -3,20 +3,20 @@ import plotly.graph_objects as go
 from collections import defaultdict
 
 # Step 1: Load the Data
-df = pd.read_csv('Data/WR Sankey  copy.csv', encoding='utf-8')
+df = pd.read_csv('Data\Sankey_Pull_March.csv', encoding='utf-8')
 
 # Step 2: Data Preprocessing
 
 # Clean column names
 df.columns = df.columns.str.strip().str.replace('Â', '').str.replace('\u00a0', '').str.replace('¬†', '')
 
-# Remove rows with missing emails, 'Track Selection', or 'Season Selection'
-df = df.dropna(subset=['Email', 'Track Selection', 'Season Selection'])
+# Remove rows with missing emails, Track, or Season
+df = df.dropna(subset=['Email', 'Track', 'Season'])
 
 # Convert relevant columns to strings
 df['Email'] = df['Email'].astype(str)
-df['Track Selection'] = df['Track Selection'].astype(str)
-df['Season Selection'] = df['Season Selection'].astype(str)
+df['Track'] = df['Track'].astype(str)
+df['Season'] = df['Season'].astype(str)
 df['Verified Complete'] = df['Verified Complete'].astype(str)
 df['Dropped'] = df['Dropped'].astype(str)
 df['Level'] = df['Level'].astype(str).str.strip()  # Ensure 'Level' is treated as string and strip whitespace
@@ -24,13 +24,14 @@ df['Pillar'] = df['Pillar'].astype(str).str.strip()  # Ensure 'Pillar' is treate
 
 # Define the season order for chronological sorting
 season_order = [
-    'Winter 2022', 'Spring 2022', 'Summer 2022', 'Fall 2022',
+    '2021', 'Winter 2022', 'Spring 2022', 'Summer 2022', 'Fall 2022',
     'Winter 2023', 'Spring 2023', 'Summer 2023', 'Fall 2023',
-    'Winter 2024', 'Spring 2024', 'Summer 2024', 'Fall 2024'
+    'Winter 2024', 'Spring 2024', 'Summer 2024', 'Fall 2024',
+    'Winter 2025', 'Spring 2025'
 ]
 
-# Ensure 'Season Selection' is categorical with the defined order
-df['Season Selection'] = pd.Categorical(df['Season Selection'], categories=season_order, ordered=True)
+# Ensure 'Season' is categorical with the defined order
+df['Season'] = pd.Categorical(df['Season'], categories=season_order, ordered=True)
 
 # Function to determine the status per email per season
 def get_status(group):
@@ -40,10 +41,10 @@ def get_status(group):
         return group.iloc[0]
 
 # Apply the function to get one entry per email per season
-df = df.groupby(['Email', 'Season Selection'], as_index=False, group_keys=False).apply(get_status).reset_index(drop=True)
+df = df.groupby(['Email', 'Season'], as_index=False, group_keys=False).apply(get_status).reset_index(drop=True)
 
 # Sort data by email and season to reflect the chronological order
-df = df.sort_values(['Email', 'Season Selection'])
+df = df.sort_values(['Email', 'Season'])
 
 # Anonymize emails to protect privacy
 df['Email'] = df['Email'].apply(lambda x: f"User_{abs(hash(x))%10000}")
@@ -82,7 +83,7 @@ def pillar_category(pillar):
 
 for email, group in df.groupby('Email'):
     previous_node = None
-    group = group.sort_values('Season Selection')  # Ensure chronological order
+    group = group.sort_values('Season')  # Ensure chronological order
 
     # For building the learning path of this user
     path = []
@@ -91,7 +92,7 @@ for email, group in df.groupby('Email'):
 
     for idx, row in group.iterrows():
         # Build full class name including Level and Pillar
-        class_taken = row['Track Selection']
+        class_taken = row['Track']
         level = row['Level'] if pd.notna(row['Level']) and row['Level'].strip().lower() != 'nan' else ''
         pillar = row['Pillar'] if pd.notna(row['Pillar']) and row['Pillar'].strip().lower() != 'nan' else ''
         # Only include Pillar if it is not empty
@@ -105,7 +106,7 @@ for email, group in df.groupby('Email'):
             class_full_name += f" {pillar}"
 
         if pd.isnull(class_taken) or class_taken.strip() == '':
-            continue  # Skip if 'Track Selection' is missing or empty
+            continue  # Skip if 'Track' is missing or empty
 
         # Class Node with Step Numbers for visualization
         class_node_label = f"{class_full_name} Step {step}"
