@@ -3,6 +3,7 @@ import numpy as np
 import os
 import re
 import json
+import jinja2
 from collections import defaultdict
 
 # Silence future fillna downcasting warnings
@@ -732,6 +733,19 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         "    .section-content{ border:1px solid #ddd; padding:12px; margin-bottom:1em;\n"
         "                      background-color:#fafafa;}\n"
         "    .chart-section{ margin-bottom:2em;}\n"
+        "    .export-btn { \n"
+        "      background-color: #4CAF50;\n"
+        "      border: none;\n"
+        "      color: white;\n"
+        "      padding: 8px 16px;\n"
+        "      text-align: center;\n"
+        "      text-decoration: none;\n"
+        "      display: inline-block;\n"
+        "      font-size: 14px;\n"
+        "      margin: 4px 2px;\n"
+        "      cursor: pointer;\n"
+        "      border-radius: 4px;\n"
+        "    }\n"
         "  </style>\n"
         '  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>\n'
         "</head>\n"
@@ -797,6 +811,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{t_}'>{t_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"byTrackTable\", \"track_data.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='byTrackTable'>\n"
         "<thead><tr>\n"
@@ -846,6 +861,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
     html_parts.append(
         "  </select>\n"
         "  <button onclick='updateTSOStats()'>Update</button>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"tsoTable\", \"track_season_offering.csv\")' style='margin-left: 10px;'>Export to CSV</button>\n"
         "</div>\n"
         "<div id='trackSeasonOfferingResults'></div>\n"
         "</div></div>\n"
@@ -901,6 +917,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
     html_parts.append(
         "  </select>\n"
         "  <button onclick='updateCombinedTSLStats()'>Update</button>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"ctslTable\", \"combined_track_season_level.csv\")' style='margin-left: 10px;'>Export to CSV</button>\n"
         "</div>\n"
         "<div id='combinedTSLResults'></div>\n"
         "</div></div>\n"
@@ -921,6 +938,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{t_}'>{t_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"motivationsTable\", \"motivations.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='motivationsTable'><thead><tr>\n"
     )
@@ -971,6 +989,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{t_}'>{t_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"topicInterestTable\", \"topic_interest.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='topicInterestTable'><thead><tr>\n"
     )
@@ -1004,6 +1023,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{t_}'>{t_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"pillarTable\", \"pillar_insights.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='pillarTable'><thead><tr>\n"
     )
@@ -1036,6 +1056,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{t_}'>{t_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"specialTable\", \"special_interests.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='specialTable'><thead><tr>\n"
     )
@@ -1088,6 +1109,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{t_}'>{t_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"trackFamiliarityTable\", \"track_familiarity.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='trackFamiliarityTable'><thead><tr>\n"
     )
@@ -1129,6 +1151,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         html_parts.append(f"    <option value='{c_}'>{c_}</option>\n")
     html_parts.append(
         "  </select>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"cmsCenterTable\", \"cms_center_breakdown.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<table id='cmsCenterTable'><thead><tr>\n"
     )
@@ -1175,6 +1198,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
     html_parts.append(
         "  </select>\n"
         "  <button onclick='updateOITBreakdown()'>Update</button>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"oitTable\", \"oit_breakdown.csv\")' style='margin-left: 10px;'>Export to CSV</button>\n"
         "</div>\n"  # close .filter-container
 
         "<div id='oitBreakdownResults'></div>\n"
@@ -1222,6 +1246,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
     html_parts.append(
         "  </select>\n"
         "  <button onclick='updateRepeatedByTrackStats()'>Update</button>\n"
+        "  <button class='export-btn' onclick='exportTableToCSV(\"repeatedByTrackTable\", \"repeated_enrollments_by_track.csv\")'>Export to CSV</button>\n"
         "</div>\n"
         "<div id='repeatedByTrackResults'></div>\n"
         "</div></div>\n"
@@ -1366,6 +1391,31 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
     # JS for interactivity
     html_parts.append(
         "<script>\n"
+        "function exportTableToCSV(tableId, filename) {\n"
+        "  let table = document.getElementById(tableId);\n"
+        "  let rows = Array.from(table.querySelectorAll('tr:not([style*=\"display: none\"])'));\n"
+        "  let csvContent = 'data:text/csv;charset=utf-8,';\n"
+        "  \n"
+        "  // Get headers\n"
+        "  let headers = Array.from(rows[0].querySelectorAll('th'))\n"
+        "    .map(header => '\"' + header.textContent.replace(/\"/g, '\"\"') + '\"');\n"
+        "  csvContent += headers.join(',') + '\\n';\n"
+        "  \n"
+        "  // Get visible rows\n"
+        "  rows.slice(1).forEach(row => {\n"
+        "    let cells = Array.from(row.querySelectorAll('td'))\n"
+        "      .map(cell => '\"' + cell.textContent.replace(/\"/g, '\"\"') + '\"');\n"
+        "    csvContent += cells.join(',') + '\\n';\n"
+        "  });\n"
+        "  \n"
+        "  let encodedUri = encodeURI(csvContent);\n"
+        "  let link = document.createElement('a');\n"
+        "  link.setAttribute('href', encodedUri);\n"
+        "  link.setAttribute('download', filename);\n"
+        "  document.body.appendChild(link);\n"
+        "  link.click();\n"
+        "  document.body.removeChild(link);\n"
+        "}\n\n"
         f"var oitNonOitData = {oit_data_json};\n" +
         "function toggleSection(contentId){\n"
         "  const el=document.getElementById(contentId);\n"
@@ -1421,7 +1471,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         "    let offeringMatch = chosenOfferings ? chosenOfferings.includes(row['Offering']) : true;\n"
         "    return trackMatch && seasonMatch && offeringMatch;\n"
         "  });\n\n"
-        "  let html = \"<table><thead><tr>\" +\n"
+        "  let html = \"<table id='tsoTable'><thead><tr>\" +\n"
         "             \"<th>Track</th><th>Season</th><th>Offering</th>\" +\n"
         "             \"<th>Total Enrolled</th><th>Total Completed</th><th>Total Dropped</th>\" +\n"
         "             \"<th>Completion Rate</th><th>Drop Rate</th>\" +\n"
@@ -1487,7 +1537,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         "    document.getElementById('combinedTSLResults').innerHTML='<p>No data found.</p>';\n"
         "    return;\n"
         "  }\n"
-        "  let html=\"<table><thead><tr>"
+        "  let html=\"<table id='ctslTable'><thead><tr>"
         "<th>Season</th><th>Track</th><th>Level</th>"
         "<th>Total Enrolled</th><th>Total Completed</th><th>Total Dropped</th>"
         "<th>completion_rate</th><th>drop_rate</th><th>unique_participants</th>"
@@ -1535,7 +1585,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         "  let uniqueEmails=new Set(filtered.map(x=>x['Email']));\n"
         "  let countUnique=uniqueEmails.size;\n"
         "  let html=`<p>Number of participants matching filters: <strong>${countUnique}</strong></p>`;\n"
-        "  html+='<table><thead><tr>';\n"
+        "  html+='<table id=\"repeatedByTrackTable\"><thead><tr>';\n"
         "  let columns=['Email','Track','Times Enrolled in Track','Times Completed in Track','total_distinct_tracks','total_enrollments','total_completions','total_drops'];\n"
         "  columns.forEach(c=>{html+=`<th>${c}</th>`;});\n"
         "  html+='</tr></thead><tbody>';\n"
@@ -1572,7 +1622,7 @@ def generate_insights_report(input_csv="Data/Sankey_Pull_March.csv", output_html
         "    document.getElementById('oitBreakdownResults').innerHTML = '<p>No data found.</p>';\n"
         "    return;\n"
         "  }\n\n"
-        "  let html = \"<table><thead><tr>\"\n"
+        "  let html = \"<table id='oitTable'><thead><tr>\"\n"
         "           + \"<th>Track</th><th>Season</th><th>OIT vs Non-OIT</th><th>Count</th>\"\n"
         "           + \"</tr></thead><tbody>\";\n\n"
         "  filtered.forEach(row => {\n"
