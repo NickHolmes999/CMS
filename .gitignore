@@ -1,21 +1,61 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-*.csv
+# Virtual Environment
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Local environment variables
+.env
+
+# Generated files
+*.html
+/Data/*.csv
 qualtricsapi_old.py
 qualtricsapi_restored.py
 QualtricsSecrets.py
 update.json
 *.ini
-*.ini
 qualtrics_key.ini
-*.ini
-*.ini
 hello.py
 comp_debug.py
 comp_debug
-*.pyc
-qualtrics_key.ini
-__pycache__/
-*.pyc
 *.xlsx
-*.ini
 errors.txt
